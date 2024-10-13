@@ -1,0 +1,35 @@
+<head>
+    <style>
+        #menu {
+            background: #000022;
+            width: 100%;
+            height: 70px;
+            position: absolute;
+            z-index: 999;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: right;
+            color: white;
+            align-items: center;      
+        }
+
+        .options {
+            margin: 50px;
+            cursor: pointer;
+        }
+
+        .options:hover {
+            color:#FFA500;
+        }
+    </style>
+</head>
+<div id="menu">
+    <div class="options" onclick="goTo('add')">Find</div>
+    <div class="options" onclick="goTo('about')">About</div>
+</div>
+<script>
+    async function goTo(route) {
+        window.location.href = "/" + route;
+    }
+</script>

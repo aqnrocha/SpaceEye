@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpaceEye</title>
+    <link rel="stylesheet" type="text/css" href="static/css/SpaceEye.css">
+</head>
+<body>
+    {% include 'components/header.html' %}
+    <div id="map"></div>
+    <div id="modal-save-polygon" class="modal" style="display: none;">
+        <div id="card-save-polygon" class="card">
+            <div class="modal-title">
+                <p>Buscar imagens deste local?</p>
+                <div id="close-modal-container" class="close-modal" onclick="close_modal('modal-save-polygon')">X</div>
+            </div>
+            <div class="modal-form">
+                <div id="coordinates-container">
+                    <input id="coordinates" style="display: none;">
+                    <textarea id="coordinates-textarea"></textarea>
+                </div>
+                <div id="form-container">
+                    <btn class="form-button" onclick="sendPolygon()">Buscar imagens</btn>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-view-images" class="modal" style="display: none;">
+        <div class="card-images">
+            <div class="modal-title">
+                <p>Imagens relacionadas</p>
+                <div id="close-modal-imagens" class="close-modal" onclick="close_modal('modal-view-images')">X</div>
+            </div>
+            <div id="image-list">
+                <div id="no-images" style="display: none;">
+                    Não encontramos imagens para esta propriedade!
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div id="loading-page-container" style="display: none;">
+        <div>
+            <p class="loading">Buscando informações<span>.</span><span>.</span><span>.</span> </p>
+        </div>
+    </div>    
+    <div class="modal" id="modal-analysis-container" style="display: none;">
+        <div id="modal-analysis-content">
+            <div class="modal-title2">
+                <p>Imagem</p>
+                <div id="close-modal-imagens" class="close-modal" onclick="close_modal('modal-analysis-container')">X</div>
+            </div>
+            <div id="map2"></div>
+        </div>
+    </div>    
+</body>
+<script src="../static/js/SpaceEye.js"></script>
+</html>
