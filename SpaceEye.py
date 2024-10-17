@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect
 
 SpaceEye = Blueprint('SpaceEye', __name__)
 
-@SpaceEye.route("/SpaceEye")
+@SpaceEye.route("/")
 def homepage():
     return render_template(
         "SpaceEye.html"

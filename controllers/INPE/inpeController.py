@@ -6,15 +6,18 @@ import folium
 import requests
 import pandas as pd
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class INPE:
 
     def __init__(self, polygon):
         self.polygon = polygon
-        self.email_cadastrado = "?email=bruno.aqnrocha@gmail.com"
+        self.email = os.getenv("email_inpe")
 
     def insere_parametro(self, link):
-        return link + self.email_cadastrado  
+        return link + "?email=" + self.email  
 
     def verifica_sobreposicao(self, poligono):
         poligono_interesse = self.polygon

@@ -134,16 +134,20 @@ class Draw(JSCSSMixin, MacroElement):
                     background: white;
                     color: black;
                     padding: 6px;
-                    border-radius: 4px;
                     font-family: 'Helvetica Neue';
                     cursor: pointer;
-                    font-size: 12px;
                     text-decoration: none;
                     top: 90px;
+                    border: unset;
+                    border-radius: 8px;
+                    height: 40px;
+                    font-size: 20px;
+                    text-align: center;
+                    width: 100px;                    
                 }
             </style>
         """
-        export_button = """<a id='export'>Export</a>"""
+        export_button = """<a id='export'>Buscar</a>"""
         if self.export:
             figure.header.add_child(Element(export_style), name="export")
             figure.html.add_child(Element(export_button), name="export_button")

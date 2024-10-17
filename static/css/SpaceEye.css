@@ -21,7 +21,7 @@ body {
 
 .modal {
     display: flex;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(50, 50, 50, 0.9);
     position: fixed;
     left: 0;
     top: 0;
@@ -54,31 +54,25 @@ body {
     padding: 15px;
     justify-content: space-between;
     font-weight: 500;
-    background: #0F1C3F;
+    background: white;
+    color: black;
+    border-bottom: 2px solid #F2F2F2;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    font-size: 18px;
 }
+
 .modal-form {
     display: flex;
     flex-direction: column;
     padding: 50px;
-    background: #28293D;
-    color: white;
+    background: white;
+    color: black;
 }
 #form-container{
     display: flex;
     margin-top: 20px;
     justify-content: center;
-}
-
-input {
-    margin-bottom: 20px;
-    outline: none;
-    height: 25px;
-    border-radius: 8px;
-    border: 2px solid #F2F2F2F2;
-}
-
-label {
-    margin-bottom: 10px;
 }
 
 #coordinates-container {
@@ -105,6 +99,7 @@ textarea {
     outline: none;
     border: 2px solid #F2F2F2;
     border-radius: 8px;
+    background: #F2F2F2;
 }
 
 .close-modal {
@@ -128,7 +123,7 @@ textarea {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #28293D;
+    background-color: white;
     height: 100%;
     overflow: auto;
 }
@@ -137,7 +132,7 @@ textarea {
     border-radius: 16px;
     margin: 10px;
     cursor: pointer;
-    background: #000022;
+    background: #34675C;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -146,7 +141,7 @@ textarea {
 }
 
 .image-container:hover {
-    background-color: #0F1C3F;
+    background-color: #468B7C;
 }
 
 .image-title {
@@ -162,7 +157,7 @@ textarea {
 
 .form-button {
     padding: 20px;
-    background: #0F1C3F;
+    background: #34675C;
     border: none;
     border-radius: 8px;
     margin: 10px;
@@ -170,21 +165,23 @@ textarea {
     cursor: pointer;
     color: white;
     width: 300px;
+    font-weight: 500;
 }
 
-.form-button:hover {
-    background: #0F1C3F;
-}
+/* .form-button:hover {
+    background: #e3e3e3;
+    color: black;
+} */
 
 #loading-page-container {
     display: flex;
     position: fixed;
-    z-index: 1;
+    z-index: 999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #000022;
+    background-color: #212121;
     justify-content: center;
     align-items: center;
 }
@@ -240,6 +237,7 @@ textarea {
     justify-content: center;
     align-items: center;
     font-size: 30px;
+    color: black;
 }
 
 #map2 > div > div {
@@ -268,9 +266,11 @@ textarea {
     padding: 15px;
     justify-content: space-between;
     font-weight: 500;
-    background: #0F1C3F;
+    background: white;
     border-top-left-radius: 16px;
-    border-top-right-radius: 16px;    
+    border-top-right-radius: 16px;
+    color: black;
+    font-size: 18px;
 }
 
 .close-modal {
@@ -281,3 +281,15 @@ textarea {
     height: 50px;
     cursor: pointer;
 }       
+
+#export {
+    color: black;
+    background-color: white;
+    border: unset;
+    cursor: pointer;
+    border-radius: 8px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    width: 100px;
+}

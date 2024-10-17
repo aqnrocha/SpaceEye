@@ -1,0 +1,131 @@
+.serch-container {
+    margin-right: 100px;
+}
+
+#localidade {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+label {
+    color: var(--label-color);
+    font-size: var(--label-size);
+    font-weight: var(--label-weight);
+}
+
+.select-label-title {
+    font-size: var(--element-label-size);
+    font-weight: var(--element-label-weight);
+    color: var(--title-color);
+}
+
+.label-value {
+    font-weight: var(--element-label-weight);
+    color: var(--title-color);
+}
+
+.label-subtitle {
+    font-size: var(--sub-title-size);
+    font-weight: var(--sub-title-weight);
+}
+
+.tab-title {
+    font-size: var(--element-label-size);
+    font-weight: var(--element-label-weight);
+    cursor: pointer;
+}
+
+h2 {
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+    color: var(--title-color);
+    height: 32px;
+}
+
+input {
+    height: 40px;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding: 0 0px 0px 10px;
+    margin-right: 10px;
+    background-color: #F2F2F2;
+    font-size: 18px;
+}
+
+button {
+    font-size: var(--element-label-size);
+    font-weight: var(--element-label-weight);
+}
+
+#search-button {
+    color: #FFFFFF;
+    background-color: #34675C;
+    border: unset;
+    cursor: pointer;
+    border-radius: 8px;
+    height: 40px;
+    padding: 10px;
+}
+
+#menu {
+    background: white;
+    width: 100%;
+    height: 30px;
+    position: absolute;
+    z-index: 999;
+    right: 0;
+    top: 0;
+    display: flex;
+    justify-content: right;
+    color: black;
+    align-items: center;
+    padding: 20px;
+}
+
+.nav {
+    display: flex;
+    width: 250px;
+    justify-content: space-around;
+    font-size: 20px;
+}
+
+.options {
+    cursor: pointer;
+}
+
+.options > p {
+    height: 24px; /* Defina uma altura fixa */
+    transition: font-weight 0.2s; /* Suaviza a transição */
+}
+
+.options > p:hover {
+    font-weight: bold;
+}
+
+#dropdown, #dropdown-city {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #ffff;
+    overflow: auto;
+    max-height: 250px;
+    border: 2px solid #F2F2F2;
+    top: 60px;
+    width: 184px;
+    z-index: 1;
+    color: black;
+}
+
+.dropdown-item, .dropdown-item-city {
+    border-bottom: 2px solid #F2F2F2;
+    cursor: pointer;
+    padding: 20px;
+}
+
+.dropdown-item:hover, .dropdown-item-city:hover {
+    background-color: #F2F2F2;
+}
