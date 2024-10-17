@@ -4,6 +4,11 @@ O Space Eye é um web app desenvolvido em Python, utilizando Flask e Javascript.
 As próximas atualizações serão relacionadas a optimização do processo de aquisição das imagens, com o objetivo de diminuir o tempo de download e processamento, além de incluir outras opções de satélites (Amazonas 1, por exemplo) e índices de vegetação (NDDI e NDWI).
 
 # Instalação
+Antes de tudo, crie uma conta nos serviços do INPE `http://queimadas.dgi.inpe.br/catalogo/explore`, em seguida, crie um arquivo `.env` na raiz do projeto e adicione o email cadastrado como variável no seguinte formato:
+```
+email_inpe = EMAIL_CADASTRADO
+```
+
 Crie um ambiente virtual e instale as libs presentes em `requirements.txt`:
 ```
 python -m venv env
@@ -33,4 +38,8 @@ python __init__.py
 
 - Processamento de imagens multiespectrais
 - Dados georreferenciados
+
+
+https://github.com/user-attachments/assets/1ca37ec4-4120-441a-aee1-41a590b176be
+
 
