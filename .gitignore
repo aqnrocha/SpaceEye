@@ -1,2 +1,6 @@
 env/
 controllers/imgs/
+todo.txt
+*.tif
+*mp4
+*.env
