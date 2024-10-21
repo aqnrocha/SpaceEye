@@ -1,3 +1,6 @@
+# Space Eye
+https://github.com/user-attachments/assets/1ca37ec4-4120-441a-aee1-41a590b176be
+
 # Sobre o projeto
 O Space Eye é um web app desenvolvido em Python, utilizando Flask e Javascript. O objetivo é auxiliar na busca de imagens de satélite e o processamento das mesmas. No momento, além da lista de imagens disponíveis para a localidade, também é disponibilizado o recorte com base no polígono informado e também o Índice de Vegetação por Diferença Normalizada (NDVI) do raster selecionado.
 
@@ -37,9 +40,3 @@ python __init__.py
 - Pandas e Geopandas
 
 - Processamento de imagens multiespectrais
-- Dados georreferenciados
-
-
-https://github.com/user-attachments/assets/1ca37ec4-4120-441a-aee1-41a590b176be
-
-
