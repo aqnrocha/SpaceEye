@@ -32,7 +32,7 @@ async function sendPolygon() {
     };
     
     try {
-        let response = await fetch("/api/images", options)
+        let response = await fetch("http://localhost:5001/api/images", options)
         let imagens = await response.json();
         document.getElementById("modal-view-images").style.display = "flex";
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const map = document.getElementById("map");
         
         if (map.innerHTML.trim() === '') {
-            let response = await fetch("/api/map");
+            let response = await fetch("http://localhost:5001/api/map");
             let data = await response.json();
             console.log(data);
             map.innerHTML = data["HTML"];
@@ -136,7 +136,7 @@ async function processImage(imageId) {
         body: JSON.stringify(body)
     };
 
-    let response = await fetch(`/api/processImage`, options);
+    let response = await fetch(`http://localhost:5001/api/processImage`, options);
     await viewRaster(imageId);
 }
 
@@ -154,7 +154,7 @@ async function viewRaster(imageId) {
         })
     };
     
-    let response = await fetch(`/api/raster_view`, options);
+    let response = await fetch(`http://localhost:5001/api/raster_view`, options);
     let mapHtml = await response.json();
     console.log(mapHtml);
     

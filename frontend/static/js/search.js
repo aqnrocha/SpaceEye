@@ -108,7 +108,7 @@ function loadOptions(id, id_name, texto) {
 }    
 
 async function load_uf_select() {
-    const api_uf = "/api/IBGE/uf";
+    const api_uf = "http://localhost:5001/api/IBGE/uf";
     const ufs = await request(api_uf);
 
     ufs.sort().forEach(uf => {
@@ -117,7 +117,7 @@ async function load_uf_select() {
 }
 
 async function load_cities_select(uf) {
-    const api_cidades = `/api/IBGE/cidades/${uf}`;
+    const api_cidades = `http://localhost:5001/api/IBGE/cidades/${uf}`;
     const cidades = await request(api_cidades);
     
     const select = document.getElementById("dropdown-city");
@@ -153,7 +153,7 @@ async function find() {
     let estado = document.getElementById("selected-item-uf").value;
     let cidade = document.getElementById("selected-item-city").value;
 
-    let response = await fetch(`/api/map/${estado}/${cidade}`);
+    let response = await fetch(`http://localhost:5001/api/map/${estado}/${cidade}`);
     let data = await response.json();
     map.innerHTML = "";
     map.innerHTML = data["HTML"];
