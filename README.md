@@ -23,9 +23,9 @@ pip install -r requirements.txt
 
 Para o mapa interativo, foi necessário realizar algumas alterações no plugin Draw da lib Folium. Portanto, copie o conteúdo do arquivo `draw.py` presente na raiz do projeto e cole o mesmo em: `...\env\Lib\site-packages\folium\plugins\draw.py`
 
-Utilize o seguinte comando para iniciar a aplicação:
+O frontend e o backend devem ser iniciados de forma separada, portanto, navegue até o respectivo diretório e utilize o seguinte comando para iniciar as aplicações:
 ```
-python __init__.py
+python app.py
 ```
 
 # Tecnologias utilizadas
