@@ -2,7 +2,7 @@ import requests
 import rasterio
 import numpy as np
 import os
-
+from joblib import Parallel, delayed
 
 class ImageProcessing:
     
@@ -21,21 +21,19 @@ class ImageProcessing:
             }
         }        
 
-    def download(self, link):
-        response = requests.get(link)
-        return response.content
+    def download(self, img):
+        if os.path.exists(img["path"]):
+            pass
+        else:
+            response = requests.get(img["link"])
+            self.save(img["path"], response.content)
     
     def save(self, path, content):
         with open(path, "wb") as file:
             file.write(content)
     
     def getImages(self):
-        for img in self.imgs:
-            if os.path.exists(self.imgs[img]["path"]):
-                pass
-            else:
-                content = self.download(self.imgs[img]["link"])
-                self.save(self.imgs[img]["path"], content)
+        Parallel(n_jobs=2)(delayed(self.download)(self.imgs[img]) for img in self.imgs)
     
     def ndviGenerator(self):
         imagePath = rf"controllers/INPE/imgs/NDVI-{self.id}.tif"
