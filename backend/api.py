@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Flask, request
 from controllers.INPE.inpeController import INPE
 from shapely.geometry import Polygon
 import folium
@@ -6,10 +6,14 @@ from folium.plugins import Draw
 import ast
 from geopy.geocoders import Nominatim
 from json import load
+from flask_caching import Cache
+from flask_cors import CORS
 
-api = Blueprint('api', __name__)
+app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
+CORS(app)
 
-@api.route("/api/map")
+@app.route("/api/map")
 def map():
 
     m = folium.Map(
@@ -22,7 +26,7 @@ def map():
 
     return {"HTML": m._repr_html_()}
 
-@api.route("/api/map/<string:uf>/<string:cidade>")
+@app.route("/api/map/<string:uf>/<string:cidade>")
 def mapWithLoc(uf, cidade):
     geolocator = Nominatim(user_agent="SpaceEye")
     location = geolocator.geocode(f"{cidade}-{uf}")
@@ -37,7 +41,8 @@ def mapWithLoc(uf, cidade):
 
     return {"HTML": m._repr_html_()}
 
-@api.route("/api/images", methods=["POST"])
+@app.route("/api/images", methods=["POST"])
+@cache.cached(timeout=int((lambda x : x*24)(60)))
 def getImages():
     if request.json:
         try:
@@ -49,7 +54,7 @@ def getImages():
             print(e)
             return {"Erro": str(e)}, 400
 
-@api.route("/api/processImage", methods=["POST"])
+@app.route("/api/processImage", methods=["POST"])
 def processImage():
     body = request.get_json()
     pol = ast.literal_eval(body["coordinates"])
@@ -63,19 +68,22 @@ def processImage():
             print(e)
             return {"Erro": str(e)}, 400
 
-@api.route("/api/raster_view", methods=["POST"])
+@app.route("/api/raster_view", methods=["POST"])
 def rasterView():
     body = request.get_json()
     pol = ast.literal_eval(body["coordinates"])
     gdf = INPE(Polygon(pol[0]))    
     return {"html": gdf.map_with_raster(body["imageId"])}
 
-@api.route("/api/IBGE/uf")
+@app.route("/api/IBGE/uf")
 def return_uf():
-    with open("datasets/cidades_brasileiras.json", "r", encoding="utf-8") as arq:
+    with open(r"datasets/cidades_brasileiras.json", "r", encoding="utf-8") as arq:
         return list(load(arq).keys())
 
-@api.route("/api/IBGE/cidades/<string:uf>")
+@app.route("/api/IBGE/cidades/<string:uf>")
 def return_city(uf):
-    with open("datasets/cidades_brasileiras.json", "r", encoding="utf-8") as arq:
+    with open(r"datasets/cidades_brasileiras.json", "r", encoding="utf-8") as arq:
         return list(load(arq)[uf])
+    
+if __name__ == "__main__":
+    app.run(debug=True, port=5001)

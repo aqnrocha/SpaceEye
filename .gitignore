@@ -4,3 +4,5 @@ todo.txt
 *.tif
 *mp4
 *.env
+*/__pycache__/
+*.pyc

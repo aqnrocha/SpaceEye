@@ -46,37 +46,22 @@ class INPE:
     
     def findImage(self):
 
-        # Obtendo todas as imagens disponíveis
         link = "http://www.dgi.inpe.br/lgi-stac/collections/CBERS4A_WPM_L4_DN/items?page=1&limit=1000000000"
         response = requests.get(link)
         data = response.json()
-        
-        # Organizando as informações importantes para o projeto
-        dicionario = []
-        for item in data['features']:
-            coordList = item['geometry']['coordinates']
-            tupla = list([point for point in coordList[0]])
 
-            cloud_cover_t = item['properties']['cloud_cover']
+        dicionario = [{
+            "id": item['id'],
+            "colecao": item['collection'],
+            "coordenadas": [point for point in item['geometry']['coordinates'][0]],
+            "data/hora": item['properties']['datetime'],
+            "satelite": item['properties']['satellite'],
+            "cloud_cover": item['properties'].get('cloud_cover', 0),
+            "banda_vermelho": self.insere_parametro(item['assets']['red']['href']),
+            "banda_nir": self.insere_parametro(item['assets']['nir']['href']),
+            "thumbnail": item["assets"]["thumbnail"]["href"]
+        } for item in data['features']]
 
-            if cloud_cover_t is None:
-                cloud_cover = 0
-            else:
-                cloud_cover = cloud_cover_t
-
-            dicionario.append({
-                "id": item['id'],
-                "colecao": item['collection'],
-                "coordenadas": tupla,
-                "data/hora": item['properties']['datetime'],
-                "satelite": item['properties']['satellite'],
-                "cloud_cover": cloud_cover,
-                "banda_vermelho": self.insere_parametro(item['assets']['red']['href']),
-                "banda_nir": self.insere_parametro(item['assets']['nir']['href']),
-                "thumbnail": item["assets"]["thumbnail"]["href"]
-            })
-
-        # Verificando quais imagens sobrepõe o polígono informado
         df = pd.DataFrame(dicionario)
         relevant_images = df[df["coordenadas"].apply(self.verifica_sobreposicao)]
         return relevant_images
