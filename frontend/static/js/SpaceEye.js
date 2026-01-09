@@ -59,10 +59,11 @@ async function sendPolygon() {
                 let cloud = document.createElement("p");
                 let time = document.createElement("p");
                 let thumb = document.createElement("img");
+                let date = new Date(imagens[i]["data"])
     
                 title.innerText = imagens[i]["id"];
                 cloud.innerText = `Cloud Cover: ${imagens[i]["cloud_cover"]}`;
-                time.innerText = `Data: ${imagens[i]["data/hora"]}`;
+                time.innerText = `Data: ${date}`;
     
                 thumb.setAttribute("src", imagens[i]["thumbnail"]);
     

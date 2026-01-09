@@ -15,7 +15,7 @@ async function load_imageCards(data) {
 
         title.innerText = data[i]["id"];
         cloud.innerText = `Cloud Cover: ${data[i]["cloud_cover"]}`;
-        time.innerText = `Data: ${data[i]["data/hora"]}`;
+        time.innerText = `Data: ${data[i]["data"]}`;
 
         thumb.setAttribute("src", data[i]["thumbnail"]);
 

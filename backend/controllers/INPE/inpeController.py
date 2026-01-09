@@ -7,6 +7,8 @@ import requests
 import pandas as pd
 import os
 from dotenv import load_dotenv
+from models.entities.images_model import Images
+import json
 
 load_dotenv()
 
@@ -20,6 +22,7 @@ class INPE:
         return link + "?email=" + self.email  
 
     def verifica_sobreposicao(self, poligono):
+        poligono = json.loads(poligono)
         poligono_interesse = self.polygon
         return Polygon(poligono).contains_properly(poligono_interesse)
     
@@ -30,6 +33,7 @@ class INPE:
         instance = ImageProcessing(
             redBand=image["banda_vermelho"],
             nirBand=image["banda_nir"],
+            panBand=image["banda_pan"],
             id=image["id"]
         )
 
@@ -45,24 +49,8 @@ class INPE:
         instance_mask.applyingMask()        
     
     def findImage(self):
-
-        link = "http://www.dgi.inpe.br/lgi-stac/collections/CBERS4A_WPM_L4_DN/items?page=1&limit=1000000000"
-        response = requests.get(link)
-        data = response.json()
-
-        dicionario = [{
-            "id": item['id'],
-            "colecao": item['collection'],
-            "coordenadas": [point for point in item['geometry']['coordinates'][0]],
-            "data/hora": item['properties']['datetime'],
-            "satelite": item['properties']['satellite'],
-            "cloud_cover": item['properties'].get('cloud_cover', 0),
-            "banda_vermelho": self.insere_parametro(item['assets']['red']['href']),
-            "banda_nir": self.insere_parametro(item['assets']['nir']['href']),
-            "thumbnail": item["assets"]["thumbnail"]["href"]
-        } for item in data['features']]
-
-        df = pd.DataFrame(dicionario)
+        data = Images.get_images()
+        df = pd.DataFrame(data)
         relevant_images = df[df["coordenadas"].apply(self.verifica_sobreposicao)]
         return relevant_images
     
