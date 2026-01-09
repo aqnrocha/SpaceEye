@@ -1,5 +1,6 @@
 env/
 controllers/imgs/
+testes/
 todo.txt
 *.tif
 *mp4

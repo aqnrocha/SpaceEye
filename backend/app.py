@@ -2,7 +2,7 @@ from flask import Flask, request
 from controllers.INPE.inpeController import INPE
 from shapely.geometry import Polygon
 import folium
-from folium.plugins import Draw
+from draw import Draw
 import ast
 from geopy.geocoders import Nominatim
 from json import load
@@ -42,7 +42,6 @@ def mapWithLoc(uf, cidade):
     return {"HTML": m._repr_html_()}
 
 @app.route("/api/images", methods=["POST"])
-@cache.cached(timeout=int((lambda x : x*24)(60)))
 def getImages():
     if request.json:
         try:
@@ -84,6 +83,12 @@ def return_uf():
 def return_city(uf):
     with open(r"datasets/cidades_brasileiras.json", "r", encoding="utf-8") as arq:
         return list(load(arq)[uf])
+    
+from models.entities.images_model import Images
+@app.route("/api/images/get_images")
+def get_images():
+    images = Images.get_images()
+    return images
     
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
