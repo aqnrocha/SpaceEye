@@ -70,6 +70,7 @@ def get_images():
                 banda_pan, banda_azul, banda_verde, banda_vermelho, banda_nir, thumbnail
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING;
         """
         cursor.executemany(insert_query, records)
         conn.commit()
