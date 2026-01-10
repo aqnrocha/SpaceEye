@@ -1,5 +1,5 @@
 CREATE TABLE images (
-	id VARCHAR,
+	id VARCHAR PRIMARY KEY,
 	colecao VARCHAR,
 	coordenadas VARCHAR,
 	data TIMESTAMP,
