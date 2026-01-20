@@ -7,3 +7,4 @@ todo.txt
 *.env
 */__pycache__/
 *.pyc
+*.sh

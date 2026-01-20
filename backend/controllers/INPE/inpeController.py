@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 from models.entities.images_model import Images
 import json
+import rasterio
 
 load_dotenv()
 
@@ -24,29 +25,26 @@ class INPE:
     def verifica_sobreposicao(self, poligono):
         poligono = json.loads(poligono)
         poligono_interesse = self.polygon
-        return Polygon(poligono).contains_properly(poligono_interesse)
+        return Polygon(poligono).contains_properly(poligono_interesse)   
     
     def ndviGenerator(self, imageId):
         df = self.findImage()
         image = df[df["id"] == imageId].iloc[0]
 
-        instance = ImageProcessing(
+        instance_processing = ImageProcessing(
             redBand=image["banda_vermelho"],
             nirBand=image["banda_nir"],
             panBand=image["banda_pan"],
-            id=image["id"]
+            id=image["id"],
+            userPolygon=self.polygon
         )
 
-        instance.getImages()
-        imagePath = instance.ndviGenerator()
+        try:
+            instance_processing.getImages()
+            instance_processing.ndviGenerator()
 
-        instance_mask = Mask(
-            userPolygon=self.polygon, 
-            imagePath=imagePath, 
-            imageName=image["id"]
-        )
-        
-        instance_mask.applyingMask()        
+        except Exception as e:
+            print(e)  
     
     def findImage(self):
         data = Images.get_images()

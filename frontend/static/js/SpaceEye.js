@@ -138,7 +138,10 @@ async function processImage(imageId) {
     };
 
     let response = await fetch(`http://localhost:5001/api/processImage`, options);
-    await viewRaster(imageId);
+    console.log(response);
+    if (response.status === 200) {
+        await viewRaster(imageId);
+    }
 }
 
 async function viewRaster(imageId) {
