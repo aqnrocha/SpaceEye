@@ -93,7 +93,6 @@ class ImageProcessing:
                 print(f'Erro download {img["path"]}: {e}')
                 raise
 
-
     async def _download_all(self):
 
         connector = aiohttp.TCPConnector(limit=4)
@@ -143,29 +142,10 @@ class ImageProcessing:
 
         try:
 
-            def normalize_band(band):
-
-                valid = band[np.isfinite(band)]
-
-                if valid.size == 0:
-                    return np.zeros_like(band)
-
-                p2, p98 = np.percentile(valid, (2, 98))
-
-                if p98 <= p2:
-                    return np.zeros_like(band)
-
-                band = np.clip(band, p2, p98)
-
-                return (band - p2) / (p98 - p2)
-
             with rasterio.open(self.imgs["RED"]["path"]) as red, \
                 rasterio.open(self.imgs["GREEN"]["path"]) as green, \
                 rasterio.open(self.imgs["BLUE"]["path"]) as blue:
 
-                # --------------------------------
-                # Polígono
-                # --------------------------------
                 gdf = gpd.GeoDataFrame(
                     geometry=[self.userPolygon],
                     crs="EPSG:4326"
@@ -176,9 +156,6 @@ class ImageProcessing:
 
                 geom = [mapping(gdf.geometry.iloc[0])]
 
-                # --------------------------------
-                # Crop RED
-                # --------------------------------
                 r_crop, transform = mask(
                     red,
                     geom,
@@ -186,73 +163,91 @@ class ImageProcessing:
                     filled=False
                 )
 
-                height = r_crop.shape[1]
-                width = r_crop.shape[2]
+                g_crop, _ = mask(
+                    green,
+                    geom,
+                    crop=True,
+                    filled=False
+                )
+
+                b_crop, _ = mask(
+                    blue,
+                    geom,
+                    crop=True,
+                    filled=False
+                )
 
                 r = r_crop[0].astype(np.float32)
+                g = g_crop[0].astype(np.float32)
+                b = b_crop[0].astype(np.float32)
 
-                # --------------------------------
-                # Reproject G
-                # --------------------------------
-                g = np.zeros((height, width), dtype=np.float32)
-
-                reproject(
-                    source=rasterio.band(green, 1),
-                    destination=g,
-                    src_transform=green.transform,
-                    src_crs=green.crs,
-                    dst_transform=transform,
-                    dst_crs=red.crs,
-                    dst_width=width,
-                    dst_height=height,
-                    resampling=Resampling.cubic
+                invalid = (
+                    (r <= 0) |
+                    (g <= 0) |
+                    (b <= 0) |
+                    ~np.isfinite(r) |
+                    ~np.isfinite(g) |
+                    ~np.isfinite(b)
                 )
 
-                # --------------------------------
-                # Reproject B
-                # --------------------------------
-                b = np.zeros((height, width), dtype=np.float32)
+                r[invalid] = np.nan
+                g[invalid] = np.nan
+                b[invalid] = np.nan
 
-                reproject(
-                    source=rasterio.band(blue, 1),
-                    destination=b,
-                    src_transform=blue.transform,
-                    src_crs=blue.crs,
-                    dst_transform=transform,
-                    dst_crs=red.crs,
-                    dst_width=width,
-                    dst_height=height,
-                    resampling=Resampling.cubic
+                r *= 1.10
+                g *= 0.95
+                b *= 0.55
+
+                rgb = np.stack(
+                    [r, g, b],
+                    axis=-1
                 )
 
-                # --------------------------------
-                # Máscara
-                # --------------------------------
-                r[r <= 0] = np.nan
-                g[g <= 0] = np.nan
-                b[b <= 0] = np.nan
+                valid = rgb[np.isfinite(rgb)]
 
-                # --------------------------------
-                # Normalize individual
-                # --------------------------------
-                r = normalize_band(r)
-                g = normalize_band(g)
-                b = normalize_band(b)
+                if valid.size == 0:
+                    raise RuntimeError(
+                        "Sem pixels válidos"
+                    )
 
-                # --------------------------------
-                # Gamma
-                # --------------------------------
-                gamma = 1 / 2.2
+                p2 = np.percentile(valid, 2)
+                p98 = np.percentile(valid, 98)
 
-                r = np.power(r, gamma)
-                g = np.power(g, gamma)
-                b = np.power(b, gamma)
+                rgb = np.clip(
+                    rgb,
+                    p2,
+                    p98
+                )
 
-                rgb = np.stack([r, g, b])
+                rgb = (
+                    rgb - p2
+                ) / (
+                    p98 - p2
+                )
 
-                # --------------------------------
-                # Perfil
-                # --------------------------------
+                gamma = 1.8
+
+                rgb = np.power(
+                    rgb,
+                    1 / gamma
+                )
+
+                rgb = np.nan_to_num(rgb)
+
+                rgb_uint8 = (
+                    rgb * 255
+                ).astype(np.uint8)
+
+                rgb_uint8 = np.moveaxis(
+                    rgb_uint8,
+                    -1,
+                    0
+                )
+
+                height = rgb_uint8.shape[1]
+                width = rgb_uint8.shape[2]
+
+
                 profile = red.profile.copy()
 
                 profile.update(
@@ -265,16 +260,20 @@ class ImageProcessing:
                     compress="lzw"
                 )
 
-                with rasterio.open(rgb_path, "w", **profile) as dst:
+                with rasterio.open(
+                    rgb_path,
+                    "w",
+                    **profile
+                ) as dst:
 
-                    dst.write(
-                        (np.nan_to_num(rgb) * 255).astype(np.uint8)
-                    )
+                    dst.write(rgb_uint8)
 
             return rgb_path
 
         except Exception as e:
-            raise RuntimeError(f"Erro ao gerar TCI: {e}")
+            raise RuntimeError(
+                f"Erro ao gerar TCI: {e}"
+            )
 
     def ndviGenerator(self):
         ndvi_path = f"controllers/INPE/imgs/masks/NDVI_{self.id}.tif"
