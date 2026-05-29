@@ -47,6 +47,7 @@ def getImages():
         try:
             polygon = Polygon(request.get_json()["Coordenadas"][0])
             catalogo = INPE(polygon).findImage()
+            catalogo = catalogo.sort_values(by="data", ascending=False)
             return catalogo.to_json(orient="records")
     
         except Exception as e:
@@ -59,8 +60,9 @@ def processImage():
     pol = ast.literal_eval(body["coordinates"])
     if request.json:
         try:
-            gdf = INPE(Polygon(pol[0]))    
-            gdf.ndviGenerator(body["imageId"])
+            gdf = INPE(Polygon(pol[0]))
+            product = body["product"]
+            gdf.imageGenerator(body["imageId"], product)
             return "ok"
         
         except Exception as e:
@@ -70,9 +72,10 @@ def processImage():
 @app.route("/api/raster_view", methods=["POST"])
 def rasterView():
     body = request.get_json()
+    product = body["product"]
     pol = ast.literal_eval(body["coordinates"])
     gdf = INPE(Polygon(pol[0]))    
-    return {"html": gdf.map_with_raster(body["imageId"])}
+    return {"html": gdf.map_with_raster(body["imageId"], product)}
 
 @app.route("/api/IBGE/uf")
 def return_uf():
