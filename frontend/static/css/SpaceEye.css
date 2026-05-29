@@ -73,6 +73,16 @@ body {
     display: flex;
     margin-top: 20px;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.select-product {
+    width: 150px;   
+    height: 50px;
+    border-radius: 8px;
+    text-align: center;
+    outline: none;
 }
 
 #coordinates-container {

@@ -19,6 +19,7 @@ function open_modal(id) {
 }
 
 async function sendPolygon() {
+    const product = document.getElementById("selectProduct").value;
     parent.document.getElementById("modal-save-polygon").style.display = "none";
     await loading_page(true);
 
@@ -51,7 +52,7 @@ async function sendPolygon() {
     
                 let newdiv = document.createElement("div");
                 newdiv.className = "image-container";
-                newdiv.setAttribute("onclick", `processImage('${imagens[i]["id"]}')`)
+                newdiv.setAttribute("onclick", `processImage('${imagens[i]["id"]}', '${product}')`);
     
                 let title = document.createElement("p");
                 title.className = "image-title";
@@ -59,7 +60,7 @@ async function sendPolygon() {
                 let cloud = document.createElement("p");
                 let time = document.createElement("p");
                 let thumb = document.createElement("img");
-                let date = new Date(imagens[i]["data"])
+                let date = new Date(imagens[i]["data"]);
     
                 title.innerText = imagens[i]["id"];
                 cloud.innerText = `Cloud Cover: ${imagens[i]["cloud_cover"]}`;
@@ -118,14 +119,15 @@ document.addEventListener("DOMContentLoaded", function() {
     })();
 });
 
-async function processImage(imageId) {
+async function processImage(imageId, product) {
     await loading_page(true);
     document.getElementById("modal-view-images").style.display = "none";
 
     let data = document.getElementById("coordinates").value;
     let body = {
         'coordinates': data,
-        'imageId': imageId
+        'imageId': imageId,
+        'product': product
     };
     console.log(body);
 
@@ -145,6 +147,7 @@ async function processImage(imageId) {
 }
 
 async function viewRaster(imageId) {
+    const product = document.getElementById("selectProduct").value;
     let data = document.getElementById("coordinates").value;
 
     let options = {
@@ -154,7 +157,8 @@ async function viewRaster(imageId) {
         },
         body: JSON.stringify({
             coordinates: data,
-            imageId: imageId
+            imageId: imageId,
+            product: product
         })
     };
     

@@ -24,6 +24,10 @@
                     <textarea id="coordinates-textarea"></textarea>
                 </div>
                 <div id="form-container">
+                    <select class="select-product" id="selectProduct">
+                        <option value="NDVI">NDVI</option>
+                        <option value="TCI">TCI</option>
+                    </select>
                     <btn class="form-button" onclick="sendPolygon()">Buscar imagens</btn>
                 </div>
             </div>
@@ -55,7 +59,7 @@
             </div>
             <div id="map2"></div>
         </div>
-    </div>    
+    </div>
 </body>
 <script src="../static/js/SpaceEye.js"></script>
 </html>

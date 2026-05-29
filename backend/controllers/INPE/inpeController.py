@@ -9,7 +9,6 @@ import os
 from dotenv import load_dotenv
 from models.entities.images_model import Images
 import json
-import rasterio
 
 load_dotenv()
 
@@ -27,24 +26,44 @@ class INPE:
         poligono_interesse = self.polygon
         return Polygon(poligono).contains_properly(poligono_interesse)   
     
-    def ndviGenerator(self, imageId):
+    def imageGenerator(self, imageId, product):
         df = self.findImage()
         image = df[df["id"] == imageId].iloc[0]
 
-        instance_processing = ImageProcessing(
-            redBand=image["banda_vermelho"],
-            nirBand=image["banda_nir"],
-            panBand=image["banda_pan"],
-            id=image["id"],
-            userPolygon=self.polygon
-        )
+        if product == "NDVI":
 
-        try:
-            instance_processing.getImages()
-            instance_processing.ndviGenerator()
+            instance_processing = ImageProcessing(
+                redBand=image["banda_vermelho"],
+                nirBand=image["banda_nir"],
+                panBand=image["banda_pan"],
+                id=image["id"],
+                userPolygon=self.polygon
+            )
 
-        except Exception as e:
-            print(e)  
+            try:
+                instance_processing.getImages()
+                instance_processing.ndviGenerator()
+
+            except Exception as e:
+                print(e)  
+
+        elif product == "TCI":
+
+            instance_processing = ImageProcessing(
+                redBand=image["banda_vermelho"],
+                greenBand=image["banda_verde"],
+                blueBand=image["banda_azul"],
+                panBand=image["banda_pan"],
+                id=image["id"],
+                userPolygon=self.polygon
+            )
+
+            try:
+                instance_processing.getImages()
+                instance_processing.trueColorGenerator()
+
+            except Exception as e:
+                print(e)  
     
     def findImage(self):
         data = Images.get_images()
@@ -52,8 +71,8 @@ class INPE:
         relevant_images = df[df["coordenadas"].apply(self.verifica_sobreposicao)]
         return relevant_images
     
-    def map_with_raster(self, imageId):
-        img_info = Compressor(imageId).compress_raster()
+    def map_with_raster(self, imageId, product):
+        img_info = Compressor(imageId, product).compress_raster()
 
         centro = self.polygon.centroid
         m = folium.Map(
